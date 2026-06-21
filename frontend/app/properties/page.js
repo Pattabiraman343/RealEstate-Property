@@ -1,36 +1,29 @@
 // app/properties/page.js
 'use client';
 
-import { useState, useEffect } from 'react';
+import { Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
 import { propertyAPI } from '@/lib/api';
 import PropertyCard from '@/components/PropertyCard';
 import Loading from '@/components/Loading';
 import { 
-  FaSearch, 
-  FaFilter, 
-  FaTimes, 
-  FaAd, 
-  FaHome, 
-  FaBuilding,
-  FaBed,
-  FaMapMarkerAlt,
-  FaChevronDown,
-  FaChevronUp,
-  FaRupeeSign,
-  FaStar,
-  FaChevronLeft,
-  FaChevronRight
+  FaSearch, FaFilter, FaTimes, FaAd, FaHome, FaBuilding,
+  FaBed, FaMapMarkerAlt, FaChevronDown, FaChevronUp, 
+  FaRupeeSign, FaStar, FaChevronLeft, FaChevronRight
 } from 'react-icons/fa';
 
-export default function PropertiesPage() {
+// ============================================
+// MAIN COMPONENT WITH useSearchParams
+// ============================================
+function PropertiesContent() {
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showFilters, setShowFilters] = useState(false);
   const [pagination, setPagination] = useState({
     total: 0,
     page: 1,
-    limit: 4,  // ✅ 4 per page
+    limit: 4,
     totalPages: 0
   });
   const [expandedSections, setExpandedSections] = useState({
@@ -47,7 +40,7 @@ export default function PropertiesPage() {
     maxPrice: '',
     sort: 'created_at_desc',
     page: 1,
-    limit: 4  // ✅ 4 per page
+    limit: 4
   });
   
   const searchParams = useSearchParams();
@@ -61,14 +54,9 @@ export default function PropertiesPage() {
     setLoading(true);
     try {
       const params = Object.fromEntries(searchParams);
-      
-      // ✅ Always set limit to 4
       params.limit = 4;
       
-      console.log('🔍 Fetching with params:', params);
-      
       const response = await propertyAPI.search(params);
-      console.log('📊 Response:', response.data);
       
       let data = [];
       let paginationData = { total: 0, page: 1, limit: 4, totalPages: 0 };
@@ -97,8 +85,6 @@ export default function PropertiesPage() {
   };
 
   const applyFilters = () => {
-    console.log('🔍 Applying filters:', filters);
-    
     const params = new URLSearchParams();
     Object.entries(filters).forEach(([key, value]) => {
       if (value && value !== '' && value !== 'all') {
@@ -106,13 +92,10 @@ export default function PropertiesPage() {
       }
     });
     
-    // ✅ Always include limit=4
     params.set('limit', '4');
     params.set('page', '1');
     
-    const url = `/properties?${params.toString()}`;
-    console.log('🔗 Navigating to:', url);
-    router.push(url);
+    router.push(`/properties?${params.toString()}`);
     setShowFilters(false);
   };
 
@@ -136,7 +119,6 @@ export default function PropertiesPage() {
     }
   };
 
-  // ✅ Handle page change
   const handlePageChange = (page) => {
     if (page < 1 || page > pagination.totalPages) return;
     
@@ -177,7 +159,6 @@ export default function PropertiesPage() {
     { value: 'popular', label: 'Most Popular' }
   ];
 
-  // ✅ Generate page numbers
   const getPageNumbers = () => {
     const total = pagination.totalPages;
     const current = pagination.page;
@@ -516,7 +497,7 @@ export default function PropertiesPage() {
                   ))}
                 </div>
 
-                {/* ✅ PAGINATION - 4 per page */}
+                {/* Pagination */}
                 {pagination.totalPages > 1 && (
                   <div className="flex justify-center items-center gap-2 mt-8">
                     <button
@@ -630,5 +611,16 @@ export default function PropertiesPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+// ============================================
+// WRAP WITH SUSPENSE (Required for useSearchParams)
+// ============================================
+export default function PropertiesPage() {
+  return (
+    <Suspense fallback={<Loading />}>
+      <PropertiesContent />
+    </Suspense>
   );
 }
