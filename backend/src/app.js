@@ -27,10 +27,10 @@ const uploadsPath = path.join(__dirname, '..', 'uploads');
 console.log('📁 Uploads path:', uploadsPath);
 
 // ============================================
-// ✅ THE CORS FIX - Allow Everything
+// ✅ CORS FIX - No app.options('*', cors()) 
 // ============================================
 
-// Option 1: Allow all origins (EASIEST - Use this)
+// ✅ Use this simple CORS configuration
 app.use(cors({
   origin: '*',
   credentials: true,
@@ -38,18 +38,7 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
 }));
 
-// Option 2: Allow only your frontend (MORE SECURE - Use if you know your URL)
-// app.use(cors({
-//   origin: ['https://real-estate-property.vercel.app', 'http://localhost:3000'],
-//   credentials: true,
-//   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-//   allowedHeaders: ['Content-Type', 'Authorization'],
-// }));
-
-// ✅ Handle preflight requests
-app.options('*', cors());
-
-// ✅ Extra CORS headers
+// ✅ CORS headers middleware (without app.options)
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Credentials', 'true');
@@ -63,7 +52,7 @@ app.use((req, res, next) => {
 });
 
 // ============================================
-// REST OF YOUR APP
+// REST OF APP
 // ============================================
 
 app.use(helmet({
@@ -97,10 +86,6 @@ app.get('/health', (req, res) => {
   res.json({ 
     status: 'OK', 
     timestamp: new Date().toISOString(),
-    uploads: {
-      path: uploadsPath,
-      exists: fs.existsSync(uploadsPath)
-    }
   });
 });
 
