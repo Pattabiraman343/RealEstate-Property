@@ -24,11 +24,27 @@ const app = express();
 const uploadsPath = path.join(__dirname, '..', 'uploads');
 
 // ============================================
-// ✅ CORS - Simple and Works!
+// ✅ CORS - SPECIFIC ORIGINS (NOT WILDCARD!)
 // ============================================
 
+const allowedOrigins = [
+  'https://real-estate-property.vercel.app',
+  'https://real-estate-property-nine.vercel.app',
+  'http://localhost:3000',
+  'http://localhost:3001'
+];
+
 app.use(cors({
-  origin: '*',
+  origin: function(origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      console.log('❌ Blocked by CORS:', origin);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
