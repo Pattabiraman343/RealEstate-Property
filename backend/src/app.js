@@ -1,4 +1,4 @@
-// backend/src/app.js
+// src/app.js
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -26,11 +26,7 @@ const uploadsPath = path.join(__dirname, '..', 'uploads');
 
 console.log('📁 Uploads path:', uploadsPath);
 
-// ============================================
-// ✅ CORS FIX - No app.options('*', cors()) 
-// ============================================
-
-// ✅ Use this simple CORS configuration
+// ✅ CORS
 app.use(cors({
   origin: '*',
   credentials: true,
@@ -38,7 +34,15 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
 }));
 
-// ✅ CORS headers middleware (without app.options)
+// ✅ FIXED: Preflight requests
+app.options('/*', (req, res) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+  res.sendStatus(200);
+});
+
+// ✅ Extra CORS headers
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Credentials', 'true');
@@ -50,10 +54,6 @@ app.use((req, res, next) => {
   }
   next();
 });
-
-// ============================================
-// REST OF APP
-// ============================================
 
 app.use(helmet({
   crossOriginResourcePolicy: { policy: "cross-origin" }
@@ -86,6 +86,10 @@ app.get('/health', (req, res) => {
   res.json({ 
     status: 'OK', 
     timestamp: new Date().toISOString(),
+    uploads: {
+      path: uploadsPath,
+      exists: fs.existsSync(uploadsPath)
+    }
   });
 });
 
