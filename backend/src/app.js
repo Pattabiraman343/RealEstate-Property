@@ -1,4 +1,4 @@
-// src/app.js
+// backend/src/app.js
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -25,20 +25,46 @@ const app = express();
 const uploadsPath = path.join(__dirname, '..', 'uploads');
 
 console.log('📁 Uploads path:', uploadsPath);
-console.log('📁 Uploads exists:', fs.existsSync(uploadsPath));
 
-if (fs.existsSync(uploadsPath)) {
-  const files = fs.readdirSync(uploadsPath);
-  console.log('📄 Files:', files);
-}
+// ============================================
+// ✅ THE CORS FIX - Allow Everything
+// ============================================
 
-// ✅ Updated CORS - Allow all origins for testing
+// Option 1: Allow all origins (EASIEST - Use this)
 app.use(cors({
-  origin: '*',  // ✅ Allow all origins (fix for Vercel)
+  origin: '*',
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
 }));
+
+// Option 2: Allow only your frontend (MORE SECURE - Use if you know your URL)
+// app.use(cors({
+//   origin: ['https://real-estate-property.vercel.app', 'http://localhost:3000'],
+//   credentials: true,
+//   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+//   allowedHeaders: ['Content-Type', 'Authorization'],
+// }));
+
+// ✅ Handle preflight requests
+app.options('*', cors());
+
+// ✅ Extra CORS headers
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+  
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  next();
+});
+
+// ============================================
+// REST OF YOUR APP
+// ============================================
 
 app.use(helmet({
   crossOriginResourcePolicy: { policy: "cross-origin" }
@@ -54,25 +80,10 @@ app.get('/uploads/:filename', (req, res) => {
   const filename = req.params.filename;
   const filePath = path.join(uploadsPath, filename);
   
-  console.log('📍 Serving file:', filePath);
-  
   if (fs.existsSync(filePath)) {
-    res.sendFile(filePath, (err) => {
-      if (err) {
-        console.error('Error sending file:', err);
-        res.status(500).json({ 
-          success: false, 
-          message: 'Error serving file',
-          error: err.message
-        });
-      }
-    });
+    res.sendFile(filePath);
   } else {
-    res.status(404).json({
-      success: false,
-      message: `File ${filename} not found`,
-      path: filePath
-    });
+    res.status(404).json({ success: false, message: `File ${filename} not found` });
   }
 });
 
@@ -94,7 +105,6 @@ app.get('/health', (req, res) => {
 });
 
 app.use((req, res) => {
-  console.log('404 Not Found:', req.originalUrl);
   res.status(404).json({
     success: false,
     message: `Route ${req.originalUrl} not found`
@@ -113,7 +123,6 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
   console.log(`📚 API Docs: http://localhost:${PORT}/api-docs`);
-  console.log(`📁 Uploads path: ${uploadsPath}`);
 });
 
 export default app;
