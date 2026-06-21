@@ -26,24 +26,44 @@ const uploadsPath = path.join(__dirname, '..', 'uploads');
 
 console.log('📁 Uploads path:', uploadsPath);
 
-// ✅ SIMPLE CORS - Remove all app.options()
-app.use(cors({
-  origin: '*',
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-}));
+// ============================================
+// ✅ ULTIMATE CORS FIX - Allow Everything
+// ============================================
+
+// Enable CORS for all origins
+app.use(cors());
+
+// Additional CORS headers for all responses
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  
+  // Handle preflight requests immediately
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+  
+  next();
+});
+
+// ============================================
+// REST OF THE APP
+// ============================================
 
 app.use(helmet({
   crossOriginResourcePolicy: { policy: "cross-origin" }
 }));
 
 app.use(cookieParser());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
+// Serve static files
 app.use('/uploads', express.static(uploadsPath));
 
+// Debug route for uploads
 app.get('/uploads/:filename', (req, res) => {
   const filename = req.params.filename;
   const filePath = path.join(uploadsPath, filename);
@@ -55,12 +75,15 @@ app.get('/uploads/:filename', (req, res) => {
   }
 });
 
+// API Documentation
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-app.use('/api/auth', apiLimiter, authRoutes);
+// Routes
+app.use('/api/auth', authRoutes);
 app.use('/api/properties', propertyRoutes);
-app.use('/api/inquiries', apiLimiter, inquiryRoutes);
+app.use('/api/inquiries', inquiryRoutes);
 
+// Health check
 app.get('/health', (req, res) => {
   res.json({ 
     status: 'OK', 
@@ -72,6 +95,7 @@ app.get('/health', (req, res) => {
   });
 });
 
+// 404 handler
 app.use((req, res) => {
   res.status(404).json({
     success: false,
@@ -79,6 +103,7 @@ app.use((req, res) => {
   });
 });
 
+// Global error handler
 app.use((err, req, res, next) => {
   console.error('Error:', err.message);
   res.status(err.status || 500).json({
