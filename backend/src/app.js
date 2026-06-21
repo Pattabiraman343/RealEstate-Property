@@ -17,50 +17,44 @@ import propertyRoutes from "./routes/propertyRoutes.js";
 import inquiryRoutes from "./routes/inquiryRoutes.js";
 import { apiLimiter } from "./middleware/rateLimit.js";
 
-// ✅ Get __dirname in ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
 
-// ✅ IMPORTANT: The uploads folder is one level up from src
 const uploadsPath = path.join(__dirname, '..', 'uploads');
 
 console.log('📁 Uploads path:', uploadsPath);
 console.log('📁 Uploads exists:', fs.existsSync(uploadsPath));
 
-// List files if exists
 if (fs.existsSync(uploadsPath)) {
   const files = fs.readdirSync(uploadsPath);
   console.log('📄 Files:', files);
 }
 
-// Middleware
-app.use(helmet({
-  crossOriginResourcePolicy: { policy: "cross-origin" }
-}));
-
+// ✅ Updated CORS - Allow all origins for testing
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: '*',  // ✅ Allow all origins (fix for Vercel)
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
+}));
+
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: "cross-origin" }
 }));
 
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// ✅ SERVE STATIC FILES - THIS MUST COME BEFORE ROUTES
 app.use('/uploads', express.static(uploadsPath));
 
-// ✅ DEBUG ROUTE - Check if file exists
 app.get('/uploads/:filename', (req, res) => {
   const filename = req.params.filename;
   const filePath = path.join(uploadsPath, filename);
   
   console.log('📍 Serving file:', filePath);
-  console.log('📍 File exists?', fs.existsSync(filePath));
   
   if (fs.existsSync(filePath)) {
     res.sendFile(filePath, (err) => {
@@ -82,15 +76,12 @@ app.get('/uploads/:filename', (req, res) => {
   }
 });
 
-// API Documentation
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-// Routes
 app.use('/api/auth', apiLimiter, authRoutes);
 app.use('/api/properties', propertyRoutes);
 app.use('/api/inquiries', apiLimiter, inquiryRoutes);
 
-// Health check
 app.get('/health', (req, res) => {
   res.json({ 
     status: 'OK', 
@@ -102,7 +93,6 @@ app.get('/health', (req, res) => {
   });
 });
 
-// 404 handler
 app.use((req, res) => {
   console.log('404 Not Found:', req.originalUrl);
   res.status(404).json({
@@ -111,7 +101,6 @@ app.use((req, res) => {
   });
 });
 
-// Global error handler
 app.use((err, req, res, next) => {
   console.error('Error:', err.message);
   res.status(err.status || 500).json({
