@@ -1,73 +1,77 @@
-<<<<<<< HEAD
-# Create README.md
-echo "# 🏠 Real Estate Platform
+🏠 RealEstate-Property Platform
+Full-stack real estate listing platform | Next.js + Node.js + PostgreSQL
 
-## 📌 Live Demo
-- Frontend: https://real-estate-platform.vercel.app
-- Backend: https://real-estate-platform.onrender.com
-- API Docs: https://real-estate-platform.onrender.com/api-docs
+🌐 Live Demo
+Frontend: https://real-estate-property.vercel.app
 
-## 🛠️ Tech Stack
-- **Frontend:** Next.js 14, Tailwind CSS
-- **Backend:** Node.js, Express.js
-- **Database:** PostgreSQL
-- **Auth:** JWT with Refresh Tokens
+Backend: https://realestate-property-jq22.onrender.com
 
-## ✨ Features
-- 🔐 Authentication (Register/Login with JWT)
-- 🏠 Property CRUD with Image Upload
-- 🔍 Search, Filter, Sort, Pagination
-- 📊 Dashboard for Property Management
-- 💬 Inquiry System with Duplicate Prevention
-- 🎯 Similar Properties Recommendations
-- 📱 Fully Responsive Design
-- 🌐 SEO Optimized
-- 📚 Swagger API Documentation
+API Docs: https://realestate-property-jq22.onrender.com/api-docs
 
-## 🚀 Quick Start
+🛠️ Tech Stack
+Layer	Tech
+Frontend	Next.js 14, Tailwind CSS
+Backend	Node.js, Express.js
+Database	PostgreSQL (Neon)
+Auth	JWT (Access + Refresh Tokens)
+Docs	Swagger/OpenAPI
+✨ Features
+🔐 Auth – Register, Login, JWT with refresh tokens
 
-### Backend
-\`\`\`bash
-cd backend
-npm install
-npm run dev
-\`\`\`
+🏠 Properties – CRUD with image upload, ownership validation
 
-### Frontend
-\`\`\`bash
-cd frontend
-npm install
-npm run dev
-\`\`\`
+🔍 Search – City, price, type, bedrooms with sorting & pagination
 
-## 📁 Project Structure
-\`\`\`
-real-estate-platform/
-├── backend/
-│   ├── src/
-│   │   ├── controllers/
-│   │   ├── models/
-│   │   ├── services/
-│   │   ├── routes/
-│   │   └── middleware/
-│   └── package.json
-├── frontend/
-│   ├── app/
-│   ├── components/
-│   └── package.json
-└── README.md
-\`\`\`
+📊 Dashboard – Manage your properties & inquiries
 
-## 📝 API Documentation
-Swagger docs available at: \`/api-docs\`
+💬 Inquiries – Contact owners, duplicate & spam prevention
 
-## 👨‍💻 Author
-**Pattabiraman**
-- GitHub: [@Pattabiraman343](https://github.com/Pattabiraman343)
-- Email: your.email@gmail.com
+🎯 Similar Properties – Algorithm based on price, city, type
 
-## 📄 License
-MIT" > README.md
-=======
+🌐 SEO – SSR, dynamic metadata, OpenGraph
 
->>>>>>> d6a261f2896dcdfe6ff6e361739c51d2c92be9bc
+📚 API Docs – Swagger at /api-docs
+
+📁 Quick Structure
+text
+backend/          # Node.js + Express API
+frontend/         # Next.js App Router
+uploads/          # Property images
+🚀 Local Setup
+bash
+# Clone
+git clone https://github.com/Pattabiraman343/RealEstate-Property.git
+cd RealEstate-Property
+
+# Backend
+cd backend && npm install && npm run dev
+
+# Frontend
+cd frontend && npm install && npm run dev
+Environment Variables
+Backend (.env)
+
+text
+DATABASE_URL=postgresql://...
+JWT_SECRET=...
+REFRESH_SECRET=...
+Frontend (.env.local)
+
+text
+NEXT_PUBLIC_API_URL=http://localhost:5000/api
+📡 Key APIs
+Method	Endpoint	Description
+POST	/api/auth/register	Register
+POST	/api/auth/login	Login
+GET	/api/properties	All properties
+POST	/api/properties	Create (auth)
+PUT	/api/properties/:id	Update (auth)
+DELETE	/api/properties/:id	Delete (auth)
+GET	/api/properties/search	Search & filter
+POST	/api/inquiries	Send inquiry
+📊 Database
+users – id, name, email, password, refresh_token
+
+properties – id, title, description, price, city, type, bedrooms, image_url, user_id
+
+inquiries – id, property_id, name, phone, message
