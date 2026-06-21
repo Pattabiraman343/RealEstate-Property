@@ -13,9 +13,6 @@ import {
   FaRupeeSign, FaStar, FaChevronLeft, FaChevronRight
 } from 'react-icons/fa';
 
-// ============================================
-// MAIN COMPONENT WITH useSearchParams
-// ============================================
 function PropertiesContent() {
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -50,13 +47,30 @@ function PropertiesContent() {
     fetchProperties();
   }, [searchParams]);
 
+  // ✅ FIXED: fetchProperties function
   const fetchProperties = async () => {
     setLoading(true);
     try {
       const params = Object.fromEntries(searchParams);
       params.limit = 4;
       
-      const response = await propertyAPI.search(params);
+      console.log('🔍 Fetching with params:', params);
+      
+      // ✅ If no search params, use getAll
+      let response;
+      const hasFilters = Object.keys(params).some(key => 
+        key !== 'limit' && key !== 'page' && params[key]
+      );
+      
+      if (!hasFilters) {
+        response = await propertyAPI.getAll();
+        console.log('📊 Using getAll() - no filters');
+      } else {
+        response = await propertyAPI.search(params);
+        console.log('📊 Using search() with filters');
+      }
+      
+      console.log('📊 Response:', response.data);
       
       let data = [];
       let paginationData = { total: 0, page: 1, limit: 4, totalPages: 0 };
@@ -71,10 +85,19 @@ function PropertiesContent() {
         paginationData = response.data.pagination;
       }
       
+      // ✅ Set total correctly
+      if (data.length === 0) {
+        paginationData.total = 0;
+        paginationData.totalPages = 0;
+      } else if (paginationData.total === 0) {
+        paginationData.total = data.length;
+        paginationData.totalPages = Math.ceil(data.length / paginationData.limit);
+      }
+      
       setProperties(data);
       setPagination(paginationData);
     } catch (error) {
-      console.error('Failed to fetch properties:', error);
+      console.error('❌ Failed to fetch properties:', error);
     } finally {
       setLoading(false);
     }
@@ -110,7 +133,7 @@ function PropertiesContent() {
       page: 1,
       limit: 4
     });
-    router.push('/properties?limit=4');
+    router.push('/properties');
   };
 
   const handleSearchKeyDown = (e) => {
@@ -182,7 +205,6 @@ function PropertiesContent() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header Banner */}
       <div className="bg-gradient-to-r from-red-600 to-red-700 text-white py-8">
         <div className="container mx-auto px-4">
           <h1 className="text-3xl font-bold">Find Your Dream Property</h1>
@@ -193,7 +215,6 @@ function PropertiesContent() {
       </div>
 
       <div className="container mx-auto px-4 py-6">
-        {/* Search Bar - Desktop */}
         <div className="hidden lg:block mb-6">
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
             <div className="flex gap-3">
@@ -224,7 +245,6 @@ function PropertiesContent() {
           </div>
         </div>
 
-        {/* Mobile Search */}
         <div className="lg:hidden flex flex-col gap-3 mb-4">
           <div className="flex gap-3">
             <button
@@ -258,7 +278,7 @@ function PropertiesContent() {
         </div>
 
         <div className="flex flex-col lg:flex-row gap-6">
-          {/* LEFT SIDEBAR - FILTERS */}
+          {/* LEFT SIDEBAR */}
           <aside className={`
             lg:w-80 flex-shrink-0
             ${showFilters ? 'fixed inset-0 z-50 bg-black bg-opacity-50' : 'hidden lg:block'}
@@ -442,7 +462,6 @@ function PropertiesContent() {
 
           {/* CENTER - PROPERTIES LIST */}
           <main className="flex-1 min-w-0">
-            {/* Results Header */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-4 flex flex-wrap items-center justify-between">
               <div>
                 <span className="text-sm text-gray-500">Showing</span>
@@ -476,7 +495,6 @@ function PropertiesContent() {
               </div>
             </div>
 
-            {/* Properties Grid */}
             {properties.length === 0 ? (
               <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
                 <FaHome className="text-5xl text-gray-300 mx-auto mb-4" />
@@ -497,7 +515,6 @@ function PropertiesContent() {
                   ))}
                 </div>
 
-                {/* Pagination */}
                 {pagination.totalPages > 1 && (
                   <div className="flex justify-center items-center gap-2 mt-8">
                     <button
@@ -614,9 +631,6 @@ function PropertiesContent() {
   );
 }
 
-// ============================================
-// WRAP WITH SUSPENSE (Required for useSearchParams)
-// ============================================
 export default function PropertiesPage() {
   return (
     <Suspense fallback={<Loading />}>
