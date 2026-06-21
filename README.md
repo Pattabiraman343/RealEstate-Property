@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Create README.md
 echo "# 🏠 Real Estate Platform
 
@@ -67,3 +68,6 @@ Swagger docs available at: \`/api-docs\`
 
 ## 📄 License
 MIT" > README.md
+=======
+
+>>>>>>> d6a261f2896dcdfe6ff6e361739c51d2c92be9bc
