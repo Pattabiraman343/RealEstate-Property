@@ -3,13 +3,11 @@
 const nextConfig = {
   // Images configuration for external domains
   images: {
-    domains: ['localhost', '127.0.0.1'],
-    // If using Next.js Image component with external URLs
+    domains: ['localhost', 'realestate-property-jq22.onrender.com'],
     remotePatterns: [
       {
-        protocol: 'http',
-        hostname: 'localhost',
-        port: '5000',
+        protocol: 'https',
+        hostname: 'realestate-property-jq22.onrender.com',
         pathname: '/uploads/**',
       },
     ],

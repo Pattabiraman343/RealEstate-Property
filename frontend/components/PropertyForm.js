@@ -21,8 +21,9 @@ import {
 
 export default function PropertyForm({ property, isEdit = false }) {
   const [loading, setLoading] = useState(false);
-  const [imagePreview, setImagePreview] = useState(property?.image_url ? `http://localhost:5000${property.image_url}` : null);
-  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(property?.image_url 
+    ? `https://realestate-property-jq22.onrender.com${property.image_url}` 
+    : null);  const [imageFile, setImageFile] = useState(null);
   const [errors, setErrors] = useState({});
   const fileInputRef = useRef(null);
   const router = useRouter();

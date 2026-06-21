@@ -3,10 +3,10 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import PropertyDetailClient from './client';
 
-// ✅ Use fetch directly (NO axios, NO localStorage)
+// ✅ Use fetch directly
 async function getProperty(id) {
   try {
-    const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://realestate-property-jq22.onrender.com/api';
     const res = await fetch(`${API_URL}/properties/${id}`, {
       cache: 'no-store',
       headers: {
@@ -40,8 +40,8 @@ export async function generateMetadata({ params }) {
     }
 
     const imageUrl = property.image_url 
-      ? `http://localhost:5000${property.image_url}` 
-      : 'http://localhost:5000/default-property.jpg';
+      ? `https://realestate-property-jq22.onrender.com${property.image_url}` 
+      : null;
     
     const price = Number(property.price).toLocaleString('en-IN');
     const title = `${property.title} | ${property.bedrooms} BHK ${property.property_type} in ${property.city}`;
@@ -55,7 +55,7 @@ export async function generateMetadata({ params }) {
       openGraph: {
         title,
         description,
-        url: `http://localhost:3000/properties/${property.id}`,
+        url: `https://real-estate-property.vercel.app/properties/${property.id}`,
         type: 'article',
         images: [{ url: imageUrl, width: 1200, height: 630, alt: property.title }],
         'article:published_time': property.created_at,
@@ -67,7 +67,7 @@ export async function generateMetadata({ params }) {
         images: [imageUrl],
       },
       alternates: {
-        canonical: `http://localhost:3000/properties/${property.id}`,
+        canonical: `https://real-estate-property.vercel.app/properties/${property.id}`,
       },
       robots: {
         index: true,
@@ -94,14 +94,14 @@ export default async function PropertyDetailPage({ params }) {
     notFound();
   }
 
-  // ✅ Structured Data
+  // ✅ Structured Data - FIXED
   const structuredData = {
     '@context': 'https://schema.org',
     '@type': 'RealEstateListing',
     name: property.title,
     description: property.description,
-    url: `http://localhost:3000/properties/${property.id}`,
-    image: property.image_url ? `http://localhost:5000${property.image_url}` : undefined,
+    url: `https://real-estate-property.vercel.app/properties/${property.id}`,
+    image: property.image_url ? `https://realestate-property-jq22.onrender.com${property.image_url}` : undefined,
     price: Number(property.price),
     priceCurrency: 'INR',
     address: {

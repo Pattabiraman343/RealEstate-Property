@@ -62,8 +62,9 @@ export default function PropertyDetailClient({ property }) {
     }
   };
 
-  const imageUrl = property.image_url ? `http://localhost:5000${property.image_url}` : null;
-
+  const imageUrl = property.image_url 
+  ? `https://realestate-property-jq22.onrender.com${property.image_url}` 
+  : null;
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Back Button */}

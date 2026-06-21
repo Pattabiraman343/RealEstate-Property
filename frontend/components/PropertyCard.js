@@ -9,7 +9,7 @@ export default function PropertyCard({ property }) {
   const [imgError, setImgError] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   
-  // ✅ FIX: Use Render URL instead of localhost
+  // ✅ FIX: Use Render URL instead of 
   const imageUrl = property.image_url 
     ? `https://realestate-property-jq22.onrender.com${property.image_url}` 
     : null;

@@ -48,9 +48,8 @@ export default function DashboardPage() {
   const fetchDashboardData = async () => {
     setLoading(true);
     try {
-      // ✅ CORRECT: Using getMy() to get ONLY user's properties
       console.log('📊 Fetching MY properties...');
-      const propertiesRes = await propertyAPI.getMy();  // ← This is correct!
+      const propertiesRes = await propertyAPI.getMy();
       console.log('📊 Properties response:', propertiesRes.data);
       
       const userProperties = propertiesRes.data.data || [];
@@ -62,7 +61,6 @@ export default function DashboardPage() {
         totalProperties: userProperties.length
       }));
 
-      // Fetch inquiries for each property
       let allInquiries = [];
       for (const prop of userProperties) {
         try {
@@ -236,11 +234,11 @@ export default function DashboardPage() {
                     className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition"
                   >
                     <div className="flex flex-col md:flex-row gap-4">
-                      {/* Image */}
+                      {/* Image - ✅ FIXED URL */}
                       <div className="w-full md:w-48 h-32 bg-gray-200 rounded-lg overflow-hidden flex-shrink-0">
                         {property.image_url ? (
                           <img
-                            src={`http://localhost:5000${property.image_url}`}
+                            src={`https://realestate-property-jq22.onrender.com${property.image_url}`}
                             alt={property.title}
                             className="w-full h-full object-cover"
                           />
