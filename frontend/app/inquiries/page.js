@@ -5,7 +5,6 @@ import { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { inquiryAPI } from '@/lib/api';
 import toast from 'react-hot-toast';
-import Button from '@/components/ui/Button';
 
 export default function InquiryForm({ propertyId }) {
   const [message, setMessage] = useState('');
@@ -40,14 +39,18 @@ export default function InquiryForm({ propertyId }) {
       <textarea
         value={message}
         onChange={(e) => setMessage(e.target.value)}
-        className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400"
         rows="4"
         placeholder="Write your message to the owner..."
         required
       />
-      <Button type="submit" disabled={loading}>
+      <button
+        type="submit"
+        disabled={loading}
+        className="w-full bg-red-600 text-white py-2.5 rounded-lg hover:bg-red-700 transition disabled:opacity-50 font-medium flex items-center justify-center gap-2"
+      >
         {loading ? 'Sending...' : 'Send Inquiry'}
-      </Button>
+      </button>
     </form>
   );
 }
