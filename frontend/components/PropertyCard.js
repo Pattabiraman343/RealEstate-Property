@@ -4,13 +4,15 @@
 import Link from 'next/link';
 import { FaBed, FaMapMarkerAlt, FaRupeeSign, FaHeart, FaShare, FaClock, FaBuilding } from 'react-icons/fa';
 import { useState } from 'react';
-import Image from 'next/image';
 
 export default function PropertyCard({ property }) {
   const [imgError, setImgError] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   
-  const imageUrl = property.image_url ? `http://localhost:5000${property.image_url}` : null;
+  // ✅ FIX: Use Render URL instead of localhost
+  const imageUrl = property.image_url 
+    ? `https://realestate-property-jq22.onrender.com${property.image_url}` 
+    : null;
 
   const formatPrice = (price) => {
     if (!price) return '0';
@@ -33,7 +35,6 @@ export default function PropertyCard({ property }) {
   return (
     <Link href={`/properties/${property.id}`}>
       <div className="bg-white rounded-lg shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden group h-full flex flex-col border border-gray-200 hover:border-red-200">
-        {/* Image Container */}
         <div className="relative h-52 bg-gray-200 overflow-hidden">
           {imageUrl && !imgError ? (
             <img
@@ -51,14 +52,12 @@ export default function PropertyCard({ property }) {
             </div>
           )}
           
-          {/* Badge - New/Featured */}
           {property.id % 3 === 0 && (
             <span className="absolute top-3 left-3 bg-red-600 text-white text-xs px-2 py-1 rounded font-medium">
               Featured
             </span>
           )}
           
-          {/* Like Button */}
           <button 
             onClick={(e) => {
               e.preventDefault();
@@ -70,26 +69,18 @@ export default function PropertyCard({ property }) {
           </button>
         </div>
 
-        {/* Content */}
         <div className="p-4 flex flex-col flex-grow">
-          {/* Price */}
           <p className="text-xl font-bold text-red-600 flex items-center gap-1">
             <FaRupeeSign size={16} />
             {formatPrice(property.price)}
           </p>
-
-          {/* Title */}
           <h3 className="font-semibold text-gray-800 truncate mt-0.5 text-base">
             {property.title}
           </h3>
-
-          {/* Location */}
           <p className="text-gray-500 text-sm flex items-center gap-1 mt-0.5">
             <FaMapMarkerAlt className="text-red-400 flex-shrink-0 text-xs" />
             <span className="truncate">{property.city}</span>
           </p>
-
-          {/* Details */}
           <div className="flex items-center gap-4 mt-3 pt-3 border-t border-gray-100">
             <span className="flex items-center gap-1.5 text-gray-600 text-sm">
               <FaBed className="text-red-400" />
@@ -100,8 +91,6 @@ export default function PropertyCard({ property }) {
               {property.property_type}
             </span>
           </div>
-
-          {/* Footer */}
           <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-100">
             <span className="text-xs text-gray-400 flex items-center gap-1">
               <FaClock className="text-xs" />
