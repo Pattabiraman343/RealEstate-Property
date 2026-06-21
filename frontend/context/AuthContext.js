@@ -1,4 +1,4 @@
-// context/AuthContext.js
+// frontend/context/AuthContext.js
 'use client';
 
 import { createContext, useContext, useState, useEffect } from 'react';
@@ -22,12 +22,11 @@ export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    // Check for existing token from cookie
     const token = getCookie('token');
     const userData = localStorage.getItem('user');
     
-    console.log('🔍 AuthProvider - Token from cookie:', token ? 'Yes' : 'No');
-    console.log('🔍 AuthProvider - User from localStorage:', userData ? 'Yes' : 'No');
+    console.log('🔍 AuthProvider - Token:', token ? 'Yes' : 'No');
+    console.log('🔍 AuthProvider - User:', userData ? 'Yes' : 'No');
     
     if (token && userData) {
       try {
@@ -49,33 +48,26 @@ export const AuthProvider = ({ children }) => {
     try {
       console.log('🔐 Attempting login...');
       
-      const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
-        { email, password }
-      );
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://realestate-property-jq22.onrender.com/api';
+      
+      const res = await axios.post(`${API_URL}/auth/login`, { email, password });
       
       const { accessToken, user } = res.data.data;
       
       console.log('✅ Login successful!');
-      console.log('📝 Token:', accessToken);
-      console.log('👤 User:', user);
       
       // Store in localStorage
-      localStorage.setItem('user', JSON.stringify(user));
       localStorage.setItem('token', accessToken);
+      localStorage.setItem('user', JSON.stringify(user));
       
-      // ✅ SET COOKIE - CRITICAL FOR MIDDLEWARE
+      // Set cookie
       setCookie('token', accessToken, { 
-        maxAge: 60 * 60 * 24 * 7, // 7 days
+        maxAge: 60 * 60 * 24 * 7,
         path: '/',
         sameSite: 'lax',
       });
       
-      // Verify cookie was set
-      const cookieCheck = getCookie('token');
-      console.log('🔍 Cookie set?', cookieCheck ? '✅ Yes' : '❌ No');
-      
-      // Set axios default header
+      // Set axios header
       axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
       
       // Update state
@@ -84,8 +76,10 @@ export const AuthProvider = ({ children }) => {
       
       toast.success(`Welcome back, ${user.name}!`);
       
-      // ✅ FORCE NAVIGATION
-      window.location.href = '/dashboard';
+      // Redirect
+      setTimeout(() => {
+        window.location.href = '/dashboard';
+      }, 500);
       
       return { success: true };
     } catch (error) {
@@ -97,35 +91,31 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (name, email, password) => {
     try {
-      const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/auth/register`,
-        { name, email, password }
-      );
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://realestate-property-jq22.onrender.com/api';
+      
+      const res = await axios.post(`${API_URL}/auth/register`, { name, email, password });
       
       const { accessToken, user } = res.data.data;
       
-      // Store in localStorage
-      localStorage.setItem('user', JSON.stringify(user));
       localStorage.setItem('token', accessToken);
+      localStorage.setItem('user', JSON.stringify(user));
       
-      // ✅ SET COOKIE
       setCookie('token', accessToken, { 
         maxAge: 60 * 60 * 24 * 7,
         path: '/',
         sameSite: 'lax',
       });
       
-      // Set axios default header
       axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
       
-      // Update state
       setUser(user);
       setIsAuthenticated(true);
       
       toast.success(`Welcome, ${user.name}!`);
       
-      // ✅ FORCE NAVIGATION
-      window.location.href = '/dashboard';
+      setTimeout(() => {
+        window.location.href = '/dashboard';
+      }, 500);
       
       return { success: true };
     } catch (error) {
@@ -136,16 +126,12 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/auth/logout`,
-        {},
-        { withCredentials: true }
-      );
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://realestate-property-jq22.onrender.com/api';
+      await axios.post(`${API_URL}/auth/logout`, {}, { withCredentials: true });
     } catch (error) {
       console.error('Logout error:', error);
     }
     
-    // Clear everything
     localStorage.removeItem('user');
     localStorage.removeItem('token');
     deleteCookie('token');
