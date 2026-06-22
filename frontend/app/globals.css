@@ -1,7 +1,9 @@
+/* app/globals.css */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Scrollbar Styling */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -21,27 +23,9 @@
   background: #b91c1c;
 }
 
+/* Smooth transitions */
 * {
   transition: all 0.2s ease;
-}
-
-
-input:focus, select:focus, textarea:focus {
-  outline: none;
-  ring: 2px solid #dc2626;
-  ring-offset: 2px;
-}
-
-.btn-primary {
-  @apply bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition font-medium;
-}
-
-.btn-outline {
-  @apply border-2 border-red-600 text-red-600 px-4 py-2 rounded-lg hover:bg-red-50 transition font-medium;
-}
-
-.card-hover {
-  @apply hover:shadow-lg transition duration-300 hover:-translate-y-0.5;
 }
 
 .custom-scrollbar::-webkit-scrollbar {
@@ -60,17 +44,4 @@ input:focus, select:focus, textarea:focus {
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: #b91c1c;
-}
-
-.grid > div {
-  display: flex;
-  height: 100%;
-}
-
-.grid > div > * {
-  flex: 1;
-}
-
-.card-container {
-  max-height: 300px;
 }
