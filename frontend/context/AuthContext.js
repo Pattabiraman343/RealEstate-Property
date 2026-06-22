@@ -1,4 +1,3 @@
-// frontend/context/AuthContext.js
 'use client';
 
 import { createContext, useContext, useState, useEffect } from 'react';
@@ -25,8 +24,8 @@ export const AuthProvider = ({ children }) => {
     const token = getCookie('token');
     const userData = localStorage.getItem('user');
     
-    console.log('🔍 AuthProvider - Token:', token ? 'Yes' : 'No');
-    console.log('🔍 AuthProvider - User:', userData ? 'Yes' : 'No');
+    console.log(' AuthProvider - Token:', token ? 'Yes' : 'No');
+    console.log(' AuthProvider - User:', userData ? 'Yes' : 'No');
     
     if (token && userData) {
       try {
@@ -34,7 +33,7 @@ export const AuthProvider = ({ children }) => {
         setUser(parsedUser);
         setIsAuthenticated(true);
         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-        console.log('✅ User restored:', parsedUser.name);
+        console.log('User restored:', parsedUser.name);
       } catch (error) {
         console.error('Failed to parse user data:', error);
         localStorage.removeItem('user');
@@ -46,7 +45,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      console.log('🔐 Attempting login...');
+      console.log(' Attempting login...');
       
       const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://realestate-property-jq22.onrender.com/api';
       
@@ -54,29 +53,24 @@ export const AuthProvider = ({ children }) => {
       
       const { accessToken, user } = res.data.data;
       
-      console.log('✅ Login successful!');
+      console.log(' Login successful!');
       
-      // Store in localStorage
       localStorage.setItem('token', accessToken);
       localStorage.setItem('user', JSON.stringify(user));
       
-      // Set cookie
       setCookie('token', accessToken, { 
         maxAge: 60 * 60 * 24 * 7,
         path: '/',
         sameSite: 'lax',
       });
       
-      // Set axios header
       axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
       
-      // Update state
       setUser(user);
       setIsAuthenticated(true);
       
       toast.success(`Welcome back, ${user.name}!`);
       
-      // Redirect
       setTimeout(() => {
         window.location.href = '/dashboard';
       }, 500);

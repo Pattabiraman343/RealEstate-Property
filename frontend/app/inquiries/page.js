@@ -1,4 +1,3 @@
-// app/inquiries/page.js
 'use client';
 
 import { useAuth } from '@/context/AuthContext';
@@ -23,7 +22,6 @@ export default function InquiriesPage() {
 
   const fetchInquiries = async () => {
     try {
-      // Fetch inquiries for user's properties
       const res = await inquiryAPI.getMyInquiries();
       setInquiries(res.data.data || []);
     } catch (error) {

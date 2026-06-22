@@ -1,9 +1,7 @@
-// app/properties/[id]/page.js
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import PropertyDetailClient from './client';
 
-// ✅ Use fetch directly
 async function getProperty(id) {
   try {
     const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://realestate-property-jq22.onrender.com/api';

@@ -1,7 +1,5 @@
-// models/propertyModel.js
 import pool from "../config/db.js";
 
-// Create indexes for performance
 export const createIndexes = async () => {
   await pool.query(`
     CREATE INDEX IF NOT EXISTS idx_properties_city ON properties(city);
@@ -97,22 +95,19 @@ export const searchPropertiesModel = async (filters) => {
 
   const where = whereClause.length ? `WHERE ${whereClause.join(' AND ')}` : '';
   
-  // Sorting
   let orderBy = "ORDER BY created_at DESC";
   if (filters.sort === "price_asc") orderBy = "ORDER BY price ASC";
   if (filters.sort === "price_desc") orderBy = "ORDER BY price DESC";
 
-  // Pagination
   const page = parseInt(filters.page) || 1;
   const limit = parseInt(filters.limit) || 10;
   const offset = (page - 1) * limit;
 
-  // Get total count
   const countQuery = `SELECT COUNT(*) FROM properties ${where}`;
   const countResult = await pool.query(countQuery, values);
   const total = parseInt(countResult.rows[0].count);
 
-  // Get data
+ 
   const dataQuery = `
     SELECT id, title, description, price, city, property_type, bedrooms, image_url, created_at
     FROM properties
@@ -135,7 +130,6 @@ export const searchPropertiesModel = async (filters) => {
   };
 };
 
-// Cursor-based pagination for scalability
 export const cursorPaginationModel = async (cursor, limit = 10) => {
   let query = `
     SELECT id, title, price, city, property_type, bedrooms, image_url, created_at
@@ -161,7 +155,6 @@ export const cursorPaginationModel = async (cursor, limit = 10) => {
   };
 };
 
-// Similar properties using simple algorithm
 export const getSimilarPropertiesModel = async (propertyId) => {
   const property = await getPropertyById(propertyId);
   if (!property) return [];

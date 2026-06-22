@@ -1,4 +1,3 @@
-// frontend/lib/api.js
 import axios from 'axios';
 
 const API = process.env.NEXT_PUBLIC_API_URL || 'https://realestate-property-jq22.onrender.com/api';
@@ -11,16 +10,15 @@ const api = axios.create({
   },
 });
 
-// ✅ Add token to every request
 api.interceptors.request.use(
   (config) => {
     if (typeof window !== 'undefined') {
       const token = localStorage.getItem('token');
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
-        console.log('✅ Token added to:', config.url);
+        console.log('Token added to:', config.url);
       } else {
-        console.log('❌ No token for:', config.url);
+        console.log('No token for:', config.url);
       }
     }
     return config;
@@ -28,12 +26,11 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// ✅ Handle 401 responses
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      console.log('🔒 Unauthorized - Redirecting to login');
+      console.log(' Unauthorized - Redirecting to login');
       localStorage.removeItem('token');
       localStorage.removeItem('user');
       if (typeof window !== 'undefined') {
@@ -44,8 +41,7 @@ api.interceptors.response.use(
   }
 );
 
-// Property APIs
-export const propertyAPI = {
+ export const propertyAPI = {
   getAll: () => api.get('/properties'),
   getById: (id) => api.get(`/properties/${id}`),
   create: (formData) => {

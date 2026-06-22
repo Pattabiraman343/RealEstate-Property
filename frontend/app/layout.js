@@ -1,4 +1,3 @@
-// app/layout.js
 import './globals.css';
 import { Inter } from 'next/font/google';
 import { AuthProvider } from '@/context/AuthContext';
@@ -7,7 +6,7 @@ import Header from '@/components/Header';
 
 const inter = Inter({ subsets: ['latin'] });
 
-// ✅ SEO: Global metadata
+
 export const metadata = {
   title: {
     default: 'RealEstate - Find Your Dream Property',

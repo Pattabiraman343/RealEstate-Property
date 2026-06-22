@@ -1,4 +1,3 @@
-// validators/propertyValidator.js
 import { body } from "express-validator";
 
 export const propertyValidation = [

@@ -1,4 +1,3 @@
-// components/PropertyForm.js
 'use client';
 
 import { useState, useRef } from 'react';
@@ -40,7 +39,6 @@ export default function PropertyForm({ property, isEdit = false }) {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-    // Clear error for this field when user types
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: '' }));
     }
@@ -49,12 +47,10 @@ export default function PropertyForm({ property, isEdit = false }) {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Validate file size
       if (file.size > 5 * 1024 * 1024) {
         toast.error('Image size should be less than 5MB');
         return;
       }
-      // Validate file type
       const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
       if (!validTypes.includes(file.type)) {
         toast.error('Please upload JPEG, PNG, WEBP image');
@@ -77,7 +73,6 @@ export default function PropertyForm({ property, isEdit = false }) {
     }
   };
 
-  // ✅ Validate form fields
   const validateForm = () => {
     const newErrors = {};
     
@@ -124,9 +119,7 @@ export default function PropertyForm({ property, isEdit = false }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // ✅ Validate before submission
     if (!validateForm()) {
-      // Show first error in toast
       const firstError = Object.values(errors)[0];
       if (firstError) {
         toast.error(firstError);
@@ -163,13 +156,11 @@ export default function PropertyForm({ property, isEdit = false }) {
     } catch (error) {
       console.error('Submit error:', error);
       
-      // ✅ Handle backend validation errors
       if (error.response?.data?.errors) {
         const backendErrors = error.response.data.errors;
         const errorMessages = backendErrors.map(err => err.msg).join(', ');
         toast.error(errorMessages);
         
-        // Map backend errors to fields
         const fieldErrors = {};
         backendErrors.forEach(err => {
           if (err.path) {
@@ -197,7 +188,6 @@ export default function PropertyForm({ property, isEdit = false }) {
 
   return (
     <div className="max-w-3xl mx-auto">
-      {/* Header */}
       <div className="flex items-center gap-4 mb-6">
         <button
           onClick={() => router.back()}
@@ -217,7 +207,7 @@ export default function PropertyForm({ property, isEdit = false }) {
 
       <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
         <div className="p-6 space-y-6">
-          {/* Title */}
+      
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1.5">
               Property Title <span className="text-red-500">*</span>
@@ -244,7 +234,6 @@ export default function PropertyForm({ property, isEdit = false }) {
             )}
           </div>
 
-          {/* Description */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1.5">
               Description <span className="text-red-500">*</span>
@@ -271,7 +260,6 @@ export default function PropertyForm({ property, isEdit = false }) {
             )}
           </div>
 
-          {/* Price & City Row */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-1.5">
@@ -324,7 +312,6 @@ export default function PropertyForm({ property, isEdit = false }) {
             </div>
           </div>
 
-          {/* Property Type & Bedrooms Row */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-1.5">
@@ -384,7 +371,6 @@ export default function PropertyForm({ property, isEdit = false }) {
             </div>
           </div>
 
-          {/* Image Upload */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1.5">
               <FaImage className="inline mr-1 text-red-500" />
@@ -441,7 +427,7 @@ export default function PropertyForm({ property, isEdit = false }) {
           </div>
         </div>
 
-        {/* Form Footer */}
+
         <div className="bg-gray-50 px-6 py-4 border-t border-gray-200 flex flex-col sm:flex-row justify-between items-center gap-3">
           <button
             type="button"

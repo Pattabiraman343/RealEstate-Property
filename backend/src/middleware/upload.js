@@ -1,9 +1,7 @@
-// middleware/upload.js
 import multer from "multer";
 import path from "path";
 import fs from "fs";
 
-// Ensure uploads directory exists
 const uploadDir = "uploads";
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
@@ -19,7 +17,6 @@ const storage = multer.diskStorage({
   }
 });
 
-// File filter - only images
 const fileFilter = (req, file, cb) => {
   if (file.mimetype.startsWith('image/')) {
     cb(null, true);
@@ -30,11 +27,10 @@ const fileFilter = (req, file, cb) => {
 
 export const upload = multer({
   storage,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
+  limits: { fileSize: 5 * 1024 * 1024 },
   fileFilter
 });
 
-// Single file upload middleware wrapper
 export const uploadSingle = (fieldName = 'image') => {
   return (req, res, next) => {
     upload.single(fieldName)(req, res, (err) => {

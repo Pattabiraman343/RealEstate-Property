@@ -1,4 +1,3 @@
-// app/properties/[id]/edit/page.js
 'use client';
 
 import { useState, useEffect } from 'react';

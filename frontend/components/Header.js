@@ -1,4 +1,3 @@
-// components/Header.js
 'use client';
 
 import Link from 'next/link';
@@ -25,17 +24,15 @@ export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   
-  // Check if we're on dashboard page
+ 
   const isDashboard = pathname === '/dashboard';
   const isActive = (path) => pathname === path;
 
-  // Debug log
   useEffect(() => {
-    console.log('🔍 Header - isAuthenticated:', isAuthenticated);
-    console.log('🔍 Header - user:', user);
+    console.log('Header - isAuthenticated:', isAuthenticated);
+    console.log(' Header - user:', user);
   }, [isAuthenticated, user]);
 
-  // Close mobile menu on route change
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [pathname]);
@@ -44,7 +41,6 @@ export default function Header() {
     <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center h-16">
-          {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group">
             <div className="bg-red-600 text-white p-1.5 rounded-lg">
               <FaBuilding size={18} />
@@ -54,7 +50,6 @@ export default function Header() {
             </span>
           </Link>
 
-          {/* Desktop Navigation - Center */}
           <nav className="hidden md:flex items-center gap-1">
             <Link 
               href="/properties" 
@@ -85,9 +80,7 @@ export default function Header() {
             )}
           </nav>
 
-          {/* Right Section */}
           <div className="flex items-center gap-3">
-            {/* Search (Desktop) */}
             <div className="hidden lg:flex items-center bg-gray-50 rounded-lg px-3 py-1.5 border border-gray-200 focus-within:border-red-400 focus-within:ring-2 focus-within:ring-red-100 transition">
               <FaSearch className="text-gray-400 text-sm" />
               <input
@@ -99,13 +92,11 @@ export default function Header() {
 
             {isAuthenticated && user ? (
               <>
-                {/* Notification Bell */}
                 <button className="relative p-2 rounded-full hover:bg-gray-100 transition">
                   <FaBell className="text-gray-600" size={18} />
                   <span className="absolute top-1 right-1 w-2 h-2 bg-red-600 rounded-full"></span>
                 </button>
 
-                {/* Add Property Button */}
                 <Link 
                   href="/properties/create" 
                   className="hidden sm:flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition font-medium text-sm"
@@ -114,7 +105,6 @@ export default function Header() {
                   Add Property
                 </Link>
 
-                {/* User Dropdown */}
                 <div className="relative">
                   <button
                     onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -131,7 +121,6 @@ export default function Header() {
                     />
                   </button>
 
-                  {/* Dropdown Menu */}
                   {isDropdownOpen && (
                     <>
                       <div 
@@ -200,7 +189,7 @@ export default function Header() {
               </>
             )}
 
-            {/* Mobile Menu Button */}
+        
             <button 
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition"
@@ -214,7 +203,7 @@ export default function Header() {
           </div>
         </div>
 
-        {/* Mobile Menu */}
+
         {isMobileMenuOpen && (
           <div className="md:hidden py-4 border-t border-gray-200 space-y-1">
             {isAuthenticated && user ? (
@@ -284,7 +273,7 @@ export default function Header() {
               </>
             )}
 
-            {/* Mobile Search */}
+            
             <div className="px-4 py-3">
               <div className="flex items-center bg-gray-50 rounded-lg px-3 py-2 border border-gray-200">
                 <FaSearch className="text-gray-400 text-sm" />

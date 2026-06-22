@@ -1,4 +1,3 @@
-// lib/seo.js
 export const generatePropertySEO = (property) => {
     if (!property) return null;
   

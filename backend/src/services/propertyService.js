@@ -1,4 +1,3 @@
-// services/propertyService.js
 import * as propertyModel from "../models/propertyModel.js";
 
 export const addProperty = async (data, userId) => {

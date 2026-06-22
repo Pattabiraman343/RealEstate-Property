@@ -1,12 +1,9 @@
-// controllers/inquiryController.js
 import { addInquiry, fetchInquiries } from "../services/inquiryService.js";
 
-// CREATE INQUIRY - PUBLIC (No authentication required)
 export const create = async (req, res) => {
   try {
     const { property_id, name, phone, message } = req.body;
 
-    // Validate required fields
     if (!property_id || !name || !phone || !message) {
       return res.status(400).json({
         success: false,
@@ -14,7 +11,6 @@ export const create = async (req, res) => {
       });
     }
 
-    // Validate phone number (basic validation)
     const phoneRegex = /^[0-9]{10}$/;
     if (!phoneRegex.test(phone)) {
       return res.status(400).json({
@@ -38,7 +34,6 @@ export const create = async (req, res) => {
   }
 };
 
-// GET INQUIRIES - AUTHENTICATED (Owner only)
 export const getByProperty = async (req, res) => {
   try {
     const property_id = req.params.property_id;

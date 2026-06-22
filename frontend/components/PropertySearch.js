@@ -1,4 +1,3 @@
-// components/PropertySearch.js
 'use client';
 
 import { useState } from 'react';

@@ -1,4 +1,3 @@
-// app/properties/page.js
 'use client';
 
 import { Suspense } from 'react';
@@ -47,16 +46,14 @@ function PropertiesContent() {
     fetchProperties();
   }, [searchParams]);
 
-  // ✅ FIXED: fetchProperties function
   const fetchProperties = async () => {
     setLoading(true);
     try {
       const params = Object.fromEntries(searchParams);
       params.limit = 4;
       
-      console.log('🔍 Fetching with params:', params);
+      console.log(' Fetching with params:', params);
       
-      // ✅ If no search params, use getAll
       let response;
       const hasFilters = Object.keys(params).some(key => 
         key !== 'limit' && key !== 'page' && params[key]
@@ -64,13 +61,13 @@ function PropertiesContent() {
       
       if (!hasFilters) {
         response = await propertyAPI.getAll();
-        console.log('📊 Using getAll() - no filters');
+        console.log('Using getAll() - no filters');
       } else {
         response = await propertyAPI.search(params);
-        console.log('📊 Using search() with filters');
+        console.log('Using search() with filters');
       }
       
-      console.log('📊 Response:', response.data);
+      console.log(' Response:', response.data);
       
       let data = [];
       let paginationData = { total: 0, page: 1, limit: 4, totalPages: 0 };
@@ -85,7 +82,6 @@ function PropertiesContent() {
         paginationData = response.data.pagination;
       }
       
-      // ✅ Set total correctly
       if (data.length === 0) {
         paginationData.total = 0;
         paginationData.totalPages = 0;
@@ -278,7 +274,6 @@ function PropertiesContent() {
         </div>
 
         <div className="flex flex-col lg:flex-row gap-6">
-          {/* LEFT SIDEBAR */}
           <aside className={`
             lg:w-80 flex-shrink-0
             ${showFilters ? 'fixed inset-0 z-50 bg-black bg-opacity-50' : 'hidden lg:block'}
@@ -327,7 +322,6 @@ function PropertiesContent() {
                   </div>
                 </div>
 
-                {/* Property Type */}
                 <div className="border-b border-gray-100 pb-4">
                   <button
                     onClick={() => toggleSection('type')}
@@ -363,7 +357,6 @@ function PropertiesContent() {
                   )}
                 </div>
 
-                {/* Price Range */}
                 <div className="border-b border-gray-100 pb-4">
                   <button
                     onClick={() => toggleSection('price')}
@@ -404,7 +397,6 @@ function PropertiesContent() {
                   )}
                 </div>
 
-                {/* Bedrooms */}
                 <div className="border-b border-gray-100 pb-4">
                   <button
                     onClick={() => toggleSection('bedrooms')}
@@ -434,7 +426,6 @@ function PropertiesContent() {
                   )}
                 </div>
 
-                {/* Sort By */}
                 <div className="pb-2">
                   <label className="font-semibold text-gray-700 block mb-2">Sort By</label>
                   <select
@@ -460,7 +451,7 @@ function PropertiesContent() {
             </div>
           </aside>
 
-          {/* CENTER - PROPERTIES LIST */}
+        
           <main className="flex-1 min-w-0">
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-4 flex flex-wrap items-center justify-between">
               <div>
@@ -509,12 +500,14 @@ function PropertiesContent() {
               </div>
             ) : (
               <>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-4">
-                  {properties.map((property) => (
-                    <PropertyCard key={property.id} property={property} />
-                  ))}
-                </div>
-
+            
+<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-4 max-h-[calc(100vh-60px)] overflow-y-auto pr-2 custom-scrollbar">
+  {properties.map((property) => (
+    <div key={property.id} className="h-full">
+      <PropertyCard property={property} />
+    </div>
+  ))}
+</div>
                 {pagination.totalPages > 1 && (
                   <div className="flex justify-center items-center gap-2 mt-8">
                     <button
@@ -564,7 +557,6 @@ function PropertiesContent() {
             )}
           </main>
 
-          {/* RIGHT SIDEBAR - ADS */}
           <aside className="hidden xl:block w-64 flex-shrink-0 space-y-4">
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
               <div className="bg-gradient-to-r from-red-500 to-red-600 text-white p-3 text-center">

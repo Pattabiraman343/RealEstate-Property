@@ -1,4 +1,3 @@
-// services/authService.js
 import { findUserByEmail, createUser } from "../models/userModel.js";
 import { hashPassword, comparePassword } from "../utils/hash.js";
 import { generateAccessToken, generateRefreshToken } from "../utils/token.js";

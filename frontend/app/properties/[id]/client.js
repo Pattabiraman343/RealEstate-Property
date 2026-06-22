@@ -1,4 +1,3 @@
-// app/properties/[id]/client.js
 'use client';
 
 import { useState } from 'react';
@@ -67,7 +66,6 @@ export default function PropertyDetailClient({ property }) {
   : null;
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Back Button */}
       <div className="container mx-auto px-4 py-4">
         <button 
           onClick={() => router.back()}
@@ -80,7 +78,6 @@ export default function PropertyDetailClient({ property }) {
 
       <div className="container mx-auto px-4 pb-12">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Left - Images */}
           <div className="lg:col-span-2">
             <div className="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200">
               <div className="relative h-96 bg-gray-200">
@@ -101,7 +98,6 @@ export default function PropertyDetailClient({ property }) {
                   </div>
                 )}
                 
-                {/* Badges */}
                 <div className="absolute top-4 left-4 flex gap-2">
                   {property.id % 3 === 0 && (
                     <span className="bg-red-600 text-white text-xs px-3 py-1 rounded-full font-medium">
@@ -113,7 +109,6 @@ export default function PropertyDetailClient({ property }) {
                   </span>
                 </div>
 
-                {/* Action Buttons */}
                 <div className="absolute top-4 right-4 flex gap-2">
                   <button 
                     onClick={() => setIsLiked(!isLiked)}
@@ -134,7 +129,6 @@ export default function PropertyDetailClient({ property }) {
             </div>
           </div>
 
-          {/* Right - Quick Info */}
           <div className="space-y-4">
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
               <p className="text-sm text-gray-500">Price</p>
@@ -192,7 +186,6 @@ export default function PropertyDetailClient({ property }) {
           </div>
         </div>
 
-        {/* Description */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
           <div className="lg:col-span-2 space-y-6">
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
@@ -222,7 +215,6 @@ export default function PropertyDetailClient({ property }) {
             </div>
           </div>
 
-          {/* Right - Inquiry Form */}
           <div className="space-y-6">
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 sticky top-20">
               <h3 className="text-lg font-bold text-gray-800 flex items-center gap-2">
@@ -249,7 +241,7 @@ export default function PropertyDetailClient({ property }) {
           </div>
         </div>
 
-        {/* Similar Properties */}
+        
         <div className="mt-8">
           <SimilarProperties propertyId={property.id} />
         </div>

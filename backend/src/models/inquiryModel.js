@@ -1,7 +1,5 @@
-// models/inquiryModel.js
 import pool from "../config/db.js";
 
-// CREATE INQUIRY - PUBLIC (No authentication required)
 export const createInquiry = async (data) => {
   const { property_id, name, phone, message } = data;
 
@@ -15,7 +13,6 @@ export const createInquiry = async (data) => {
   return result.rows[0];
 };
 
-// GET INQUIRIES FOR PROPERTY (OWNER VALIDATION)
 export const getInquiriesByProperty = async (property_id, user_id) => {
   const result = await pool.query(
     `
@@ -35,7 +32,6 @@ export const getInquiriesByProperty = async (property_id, user_id) => {
   return result.rows;
 };
 
-// DUPLICATE CHECK - By phone number
 export const checkDuplicateInquiryModel = async (property_id, phone) => {
   const result = await pool.query(
     `

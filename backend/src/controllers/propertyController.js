@@ -1,4 +1,3 @@
-// controllers/propertyController.js
 import * as propertyService from "../services/propertyService.js";
 import fs from 'fs';
 import path from 'path';
@@ -7,10 +6,9 @@ export const create = async (req, res) => {
   try {
     const userId = req.user.userId;
     
-    // ✅ Get data from body (FormData fields)
     const { title, description, price, city, property_type, bedrooms } = req.body;
     
-    console.log('📝 Creating property with data:', {
+    console.log(' Creating property with data:', {
       title,
       description,
       price,
@@ -20,7 +18,6 @@ export const create = async (req, res) => {
       userId
     });
     
-    // Handle image
     const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
     
     const property = await propertyService.addProperty({
@@ -107,7 +104,6 @@ export const update = async (req, res) => {
       });
     }
     
-    // ✅ Get data from body (FormData fields)
     const { title, description, price, city, property_type, bedrooms } = req.body;
     
     const updateData = {
@@ -119,12 +115,11 @@ export const update = async (req, res) => {
       bedrooms
     };
     
-    // Handle image
     if (req.file) {
       updateData.image_url = `/uploads/${req.file.filename}`;
     }
     
-    console.log('📝 Updating property with data:', updateData);
+    console.log('Updating property with data:', updateData);
     
     const updated = await propertyService.editProperty(req.params.id, updateData);
     

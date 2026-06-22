@@ -1,4 +1,3 @@
-// app/dashboard/page.js
 'use client';
 
 import { useAuth } from '@/context/AuthContext';
@@ -48,12 +47,8 @@ export default function DashboardPage() {
   const fetchDashboardData = async () => {
     setLoading(true);
     try {
-      console.log('📊 Fetching MY properties...');
       const propertiesRes = await propertyAPI.getMy();
-      console.log('📊 Properties response:', propertiesRes.data);
-      
       const userProperties = propertiesRes.data.data || [];
-      console.log(`📊 Found ${userProperties.length} properties for user:`, user?.name);
       
       setProperties(userProperties);
       setStats(prev => ({
@@ -81,7 +76,6 @@ export default function DashboardPage() {
       }));
 
     } catch (error) {
-      console.error('Failed to fetch dashboard data:', error);
       toast.error('Failed to load dashboard data');
     } finally {
       setLoading(false);
@@ -122,7 +116,6 @@ export default function DashboardPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Welcome Section */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900">
           Welcome back, {user?.name}!
@@ -132,7 +125,6 @@ export default function DashboardPage() {
         </p>
       </div>
 
-      {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex items-center justify-between">
@@ -177,7 +169,6 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Tabs */}
       <div className="bg-white rounded-lg shadow-md overflow-hidden">
         <div className="border-b border-gray-200">
           <nav className="flex -mb-px">
@@ -206,7 +197,6 @@ export default function DashboardPage() {
           </nav>
         </div>
 
-        {/* Properties Tab */}
         {activeTab === 'properties' && (
           <div className="p-6">
             {properties.length === 0 ? (
@@ -234,7 +224,6 @@ export default function DashboardPage() {
                     className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition"
                   >
                     <div className="flex flex-col md:flex-row gap-4">
-                      {/* Image - ✅ FIXED URL */}
                       <div className="w-full md:w-48 h-32 bg-gray-200 rounded-lg overflow-hidden flex-shrink-0">
                         {property.image_url ? (
                           <img
@@ -249,7 +238,6 @@ export default function DashboardPage() {
                         )}
                       </div>
 
-                      {/* Details */}
                       <div className="flex-grow">
                         <h3 className="text-lg font-semibold">{property.title}</h3>
                         <p className="text-gray-600 text-sm flex items-center gap-1">
@@ -270,7 +258,6 @@ export default function DashboardPage() {
                         </div>
                       </div>
 
-                      {/* Actions */}
                       <div className="flex flex-row md:flex-col gap-2 items-start">
                         <Link
                           href={`/properties/${property.id}`}
@@ -299,7 +286,6 @@ export default function DashboardPage() {
           </div>
         )}
 
-        {/* Inquiries Tab */}
         {activeTab === 'inquiries' && (
           <div className="p-6">
             {inquiries.length === 0 ? (

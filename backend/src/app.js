@@ -1,4 +1,3 @@
-// backend/src/app.js
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -22,11 +21,6 @@ const __dirname = path.dirname(__filename);
 const app = express();
 
 const uploadsPath = path.join(__dirname, '..', 'uploads');
-
-// ============================================
-// ✅ CORS - SPECIFIC ORIGINS (NOT WILDCARD!)
-// ============================================
-
 const allowedOrigins = [
   'https://real-estate-property.vercel.app',
   'https://real-estate-property-nine.vercel.app',
@@ -36,12 +30,11 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: function(origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl)
     if (!origin) return callback(null, true);
     if (allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
-      console.log('❌ Blocked by CORS:', origin);
+      console.log(' Blocked by CORS:', origin);
       callback(new Error('Not allowed by CORS'));
     }
   },
@@ -49,11 +42,6 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
 }));
-
-// ============================================
-// MIDDLEWARE
-// ============================================
-
 app.use(helmet({
   crossOriginResourcePolicy: { policy: "cross-origin" }
 }));
@@ -61,11 +49,6 @@ app.use(helmet({
 app.use(cookieParser());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
-
-// ============================================
-// STATIC FILES
-// ============================================
-
 app.use('/uploads', express.static(uploadsPath));
 
 app.get('/uploads/:filename', (req, res) => {
@@ -78,25 +61,10 @@ app.get('/uploads/:filename', (req, res) => {
     res.status(404).json({ success: false, message: `File ${filename} not found` });
   }
 });
-
-// ============================================
-// API DOCS
-// ============================================
-
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-
-// ============================================
-// ROUTES
-// ============================================
-
 app.use('/api/auth', authRoutes);
 app.use('/api/properties', propertyRoutes);
 app.use('/api/inquiries', inquiryRoutes);
-
-// ============================================
-// HEALTH CHECK
-// ============================================
-
 app.get('/health', (req, res) => {
   res.json({ 
     status: 'OK', 
@@ -108,10 +76,6 @@ app.get('/health', (req, res) => {
   });
 });
 
-// ============================================
-// ERROR HANDLERS
-// ============================================
-
 app.use((req, res) => {
   res.status(404).json({ success: false, message: `Route ${req.originalUrl} not found` });
 });
@@ -121,14 +85,10 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500).json({ success: false, message: err.message || 'Internal server error' });
 });
 
-// ============================================
-// START SERVER
-// ============================================
-
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-  console.log(`📚 API Docs: http://localhost:${PORT}/api-docs`);
+  console.log(`Server running on port ${PORT}`);
+  console.log(`API Docs: http://localhost:${PORT}/api-docs`);
 });
 
 export default app;

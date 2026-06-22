@@ -6,17 +6,13 @@ import {
 import jwt from "jsonwebtoken";
 import pool from "../config/db.js";
 
-/**
- * REGISTER
- */
 export const register = async (req, res) => {
   try {
     const data = await registerUser(req.body);
 
-    // store refresh token in httpOnly cookie
     res.cookie("refreshToken", data.refreshToken, {
       httpOnly: true,
-      secure: false, // set true in production (HTTPS)
+      secure: false,
       sameSite: "strict",
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });

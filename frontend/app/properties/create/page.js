@@ -1,4 +1,3 @@
-// app/properties/create/page.js
 'use client';
 
 import { useAuth } from '@/context/AuthContext';

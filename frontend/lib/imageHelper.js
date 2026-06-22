@@ -2,12 +2,10 @@
 export const getImageUrl = (imagePath) => {
   if (!imagePath) return null;
   
-  // If it's already a full URL
   if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
     return imagePath;
   }
   
-  // ✅ FIX: Use Render URL instead of 
   const BASE_URL = process.env.NEXT_PUBLIC_API_URL 
     ? process.env.NEXT_PUBLIC_API_URL.replace('/api', '') 
     : 'https://realestate-property-jq22.onrender.com';

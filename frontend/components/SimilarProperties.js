@@ -1,4 +1,3 @@
-// components/SimilarProperties.js - Complete Version
 'use client';
 
 import { useState, useEffect } from 'react';
