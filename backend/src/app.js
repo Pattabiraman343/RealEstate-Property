@@ -25,6 +25,8 @@ const allowedOrigins = [
   'https://real-estate-property.vercel.app',
   'https://real-estate-property-nine.vercel.app',
   'http://localhost:3000',
+  'https://realestate-property-jq22.onrender.com',
+
   'http://localhost:3001'
 ];
 
